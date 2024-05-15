@@ -64,3 +64,28 @@ document.getElementById('add-person-btn').addEventListener('click', function() {
     container.appendChild(personDiv);
     container.appendChild(document.createElement('br'));
 });
+document.getElementById('travel-date-from').addEventListener('change', caculateDays);
+document.getElementById('travel-date-to').addEventListener('change', caculateDays);
+
+function caculateDays() {
+    let from = document.getElementById('travel-date-from').value;
+    let to = document.getElementById('travel-date-to').value;
+    console.log(from, to);
+
+    if (from && to) {
+        let fromDate = new Date(from);
+        let toDate = new Date(to);
+        let timeDifference = toDate - fromDate;
+        let daysDifference = timeDifference / (1000 * 3600 * 24);
+
+        if (daysDifference < 0) {
+            alert('Travel Date TO cannot be earlier than Travel Date FROM');
+            document.getElementById('travel-date-to').value = '';
+            document.getElementById('number-of-days').textContent = '';
+        }
+
+        document.getElementById('number-of-days').textContent = 'Datum putovanja: ' + daysDifference + ' dana';
+    } else {
+        document.getElementById('number-of-days').textContent = '';
+    }
+}
