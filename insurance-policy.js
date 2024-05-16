@@ -16,33 +16,33 @@ document.getElementById('add-person-btn').addEventListener('click', function() {
     personDiv.className = 'person';
 
     var firstnameLabel = document.createElement('label');
-    firstnameLabel.textContent = 'First Name:';
+    firstnameLabel.textContent = 'Ime :';
     var firstnameInput = document.createElement('input');
     firstnameInput.type = 'text';
     firstnameInput.classList = 'form-control';
-    firstnameInput.name = 'additionalFirstname[]';
+    firstnameInput.name = 'additional-first-name[]';
     firstnameInput.required = true;
 
     var lastnameLabel = document.createElement('label');
-    lastnameLabel.textContent = 'Last Name:';
+    lastnameLabel.textContent = 'Prezime:';
     var lastnameInput = document.createElement('input');
     lastnameInput.type = 'text';
     lastnameInput.classList = 'form-control';
-    lastnameInput.name = 'additionalLastname[]';
+    lastnameInput.name = 'additional-last-name[]';
     lastnameInput.required = true;
 
     var passportNumberLabel = document.createElement('label');
-    passportNumberLabel.textContent = 'Passport Number:';
+    passportNumberLabel.textContent = 'Broj pasosa:';
     var passportNumberInput = document.createElement('input');
     passportNumberInput.type = 'text';
     passportNumberInput.classList = "form-control";
-    passportNumberInput.name = 'additionalPassportNumber[]';
+    passportNumberInput.name = 'additional-passport-number[]';
     passportNumberInput.required = true;
 
     var removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.classList = "btn btn-danger";
-    removeButton.textContent = 'Remove';
+    removeButton.textContent = 'Izbrisi';
     removeButton.addEventListener('click', function() {
         container.removeChild(personDiv);
     });
@@ -64,6 +64,7 @@ document.getElementById('add-person-btn').addEventListener('click', function() {
     container.appendChild(personDiv);
     container.appendChild(document.createElement('br'));
 });
+
 document.getElementById('travel-date-from').addEventListener('change', caculateDays);
 document.getElementById('travel-date-to').addEventListener('change', caculateDays);
 
@@ -88,4 +89,8 @@ function caculateDays() {
     } else {
         document.getElementById('number-of-days').textContent = '';
     }
+}
+
+function submitForm() {
+    let formBtn = document.getElementById('submit-tbn');
 }

@@ -25,7 +25,7 @@
 
     <h2 class="h2">Unos novog osiguranja</h2>
 
-        <form action="/register.php" method="POST">
+        <form action="/register.php" method="POST" class="form col-md-6">
 
             <div class="form">
                 <div class="form-group">
@@ -94,10 +94,10 @@
                     <div id="additional-persons" class="additional-persons mt-5">
                         <h3>Dodaj Osiguraonika</h3>
                         <div id="additional-persons-container"></div>
-                        <button type="button" id="add-person-btn" class="btn btn-warning">Add New Person</button>
+                        <button type="button" id="add-person-btn" class="btn btn-warning">Dodaj Osiguraonika</button>
                     </div>
                     
-                <button type="submit" class="btn btn-success mt-2" name="save">Snimi polisu</button>
+                <button type="submit" id="submit-tbn" class="btn btn-success mt-2" name="save">Snimi polisu</button>
             </div>
 
         </form>

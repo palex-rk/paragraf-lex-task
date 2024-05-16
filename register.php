@@ -31,6 +31,7 @@ function validateTravelDates($dateFrom, $dateTo) {
 
 if (isset($_POST)) {
 
+    // echo "<pre>";var_dump($_POST);die;
         // validate first-name
         if (empty($_POST["first-name"])) {
             $response['errors']['first-name'] = "First Name is required";
@@ -127,7 +128,7 @@ if (isset($_POST)) {
             $data['phone_number'] = $phone_number;
         }
 
-        // validate last-name
+        // validate insurance-type
         if (empty($_POST["insurance-type"])) {
             $response['errors']['insurance_type'] = "Insurance type is required";
         } else {
@@ -144,17 +145,50 @@ if (isset($_POST)) {
             $response['errors'] =  "Invalid travel dates. Please check the date range.";
         }
 
+        if ($_POST['insurance-type'] == 'group') {
+            $additional_first_names = $_POST['additional-first-name'] ?? [];
+            $additional_last_names = $_POST['additional-last-name'] ?? [];
+            $additional_passport_numbers = $_POST['additional-passport-number'] ?? [];
 
+            foreach ($additional_first_names as $index => $add_first_name) {
+                $add_first_name = input_data($additional_first_names[$index]);
+                
+                if (empty($add_first_name) || !preg_match("/^[a-zA-Z. ]*$/", $add_first_name)) {
+                    $response['errors']['additionalPersons'][$index]['firstname'] = "Invalid first name";
+                }
+
+                $add_last_name = input_data($additional_last_names[$index]);
+
+                if (empty($add_last_name) || !preg_match("/^[a-zA-Z. ]*$/", $add_last_name)) {
+                    $response['errors']['additionalPersons'][$index]['firstname'] = "Invalid last name";
+                }
+                
+                $add_passport_number = input_data($additional_passport_numbers[$index]);
+                
+                if (empty($add_passport_number) || !preg_match("/^[a-zA-Z0-9]*$/", $add_passport_number)) {
+                    $response['errors']['additionalPersons'][$index]['firstname'] = "Invalid passport number";
+                }
+                
+                $group_insurance_members[] = [
+                    'first_name' => $add_first_name,
+                    'last_name' => $add_last_name,
+                    'passport_number' => $add_passport_number
+                ];
+            }
+        }
+        
         if (isset($response['errors']) > 0) {
             $response['status'] = 400;
             $response = json_encode($response);
-
-            echo ($response);
+            
+            echo json_encode($response); exit;
         } else {
+            
+            // echo "<pre>";print_r($data);die;
+
+            $db_fdbck = insertInsurance($data, $group_insurance_members);
+            
             $response['success'] = true;
-
-            $db_fdbck = insertPolicy($data);
-
             $msg_type = ($db_fdbck == 1) ? "success" : "danger";
             $message = ($db_fdbck == 1) ? "Polisa je uspesno sacuvana." : "Doslo je do greske pri upisu u bazu.";
             
@@ -165,22 +199,37 @@ if (isset($_POST)) {
 
 // var_dump($_POST);die;
 
-function insertPolicy($input)
+function insertInsurance($input, $members = [])
 {
     if (count ($input)  <= 0) {
 
         return "can not be empty array. ";
     }
+
     try {
         $conn = Database::connect();
-        $sql = "INSERT INTO `policies` (". implode(", ", array_keys($input)) . ") VALUES ( :" . implode(", :", array_keys($input)) . ')';
+        $sql = "INSERT INTO `insurances` (". implode(", ", array_keys($input)) . ") VALUES ( :" . implode(", :", array_keys($input)) . ')';
         $stmt = $conn->prepare($sql);
 
-        return $stmt->execute($input);
+        $stmt->execute($input);
+        $insurance_id = $conn->lastInsertId();
+        // echo  $insurance_id;die;
+
+        if (isset($members) && count($members) > 0 ) {
+            foreach ($members as $index => $member) {
+                $member['insurance_id'] = $insurance_id;
+                $sql_group = "INSERT INTO `group_insurance_members` (" . implode(", ", array_keys($member)) . ") VALUES ( :" . implode(", :", array_keys($member)) . ")";
+                $stmt_group = $conn->prepare($sql_group);
+                // echo "<pre>"; var_dump($sql_group, $stmt_group, $insurance_id, 'sdadad', array_merge([$insurance_id], $member));die;
+                $stmt_group->execute($member);
+            }
+        }
+
+        return true;
 
     } catch (\PDOException $e) {
         
-        return $e->getMessage();
+        echo $e->getMessage(); die;
     }
 }
 
