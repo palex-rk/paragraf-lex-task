@@ -75,6 +75,7 @@ function insertInsurance($input, $members = [])
         
         //  $sql = "INSERT INTO `insurances` (". implode(", ", array_keys($input)) . ") VALUES ( :" . implode(", :", array_keys($input)) . ')';
         $sql = "INSERT INTO `insurances` (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+
         $stmt = $conn->prepare($sql);
 
         $stmt->execute($input);

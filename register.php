@@ -10,8 +10,10 @@ use Src\Database;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = [];
 
-    $validation = validateForm($_POST);
-        
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $validation = validateForm($input);
+    // echo "<pre>";var_dump($validation);die;
         if (count($validation['errors']) > 0) {
             $response['success'] = false;
             $response['status'] = 422;
@@ -20,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
 
             $data = $validation['data'];
-            // echo "<pre>";print_r($data);die;
-            $group_insurance_members = $data['group_insurance_members'];
+            $group_insurance_members = $data['group_insurance_members'] ?? [];
+            unset($data['group_insurance_members']);
 
             try {
                 $db_fdbck = insertInsurance($data, $group_insurance_members);
@@ -53,7 +55,7 @@ function validateForm($input = [])
     } else {
         $first_name = input_data($input["first-name"]);
         // check if name only contains letters and whitespace and dots
-        if (!preg_match("/^[a-zA-Z. ]*$/", $first_name)) {
+        if (!preg_match("/^[a-zA-Z. ]*$/", $first_name)) { // (!preg_match("/^[\p{Latin}\p{Cyrillic}. ]*$/u", $string)) {
             $errors['first_name'] = "Uneto polje sadrzi nedozvoljne karaktere.";
         }
         $data['first_name'] = $first_name;
@@ -119,6 +121,13 @@ function validateForm($input = [])
         $data['travel_date_to'] = $travel_date_to;
     }
 
+    if (!isset($errors['travel_date_from']) && !isset($errors['travel_date_to'])) {
+        if (!validateTravelDates($travel_date_from, $travel_date_to)) {
+            // Invalid dates or "travel-date-to" is older than "travel-date-from"
+            $errors['date_difference'] =  "Proverite razmak izmedju datuma.";
+        }
+    }
+
     // validate passport number
     if (empty($input["passport-number"])) {
         $errors['passport_number'] = "Broj pasosa je obavezno polje.";
@@ -153,11 +162,7 @@ function validateForm($input = [])
         $data['insurance_type'] = $insurance_type;
     }
 
-    if (!validateTravelDates($travel_date_from, $travel_date_to)) {
-        // Invalid dates or "travel-date-to" is older than "travel-date-from"
-        $errors['date_difference'] =  "Nevazeci datumi. Proverite razmak izmedju datuma.";
-    }
-
+    // GROUP INSURANCE MEMBERS
     if ($input['insurance-type'] == 'group') {
         $additional_first_names = $input['additional-first-name'] ?? [];
         $additional_last_names = $input['additional-last-name'] ?? [];
@@ -165,7 +170,7 @@ function validateForm($input = [])
 
         foreach ($additional_first_names as $index => $add_first_name) {
             $add_first_name = input_data($additional_first_names[$index]);
-            
+
             if (empty($add_first_name) || !preg_match("/^[a-zA-Z. ]*$/", $add_first_name)) {
                 $errors['additionalPersons'][$index]['firstname'] = "Uneto polje sadrzi nedozvoljne karaktere.";
             }
@@ -182,7 +187,7 @@ function validateForm($input = [])
                 $errors['additionalPersons'][$index]['firstname'] = "Uneto polje sadrzi nedozvoljne karaktere.";
             }
             
-            $group_insurance_members[] = [
+            $data['group_insurance_members'][] = [
                 'first_name' => $add_first_name,
                 'last_name' => $add_last_name,
                 'passport_number' => $add_passport_number

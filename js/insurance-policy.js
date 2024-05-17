@@ -26,9 +26,15 @@ function caculateDays() {
         let toDate = new Date(to);
         let timeDifference = toDate - fromDate;
         let daysDifference = timeDifference / (1000 * 3600 * 24);
-
-        if (daysDifference < 0) {
-            alert('Travel Date TO cannot be earlier than Travel Date FROM');
+        console.log(daysDifference, 'razlika');
+        if (daysDifference <= 0) {
+            // alert('Travel Date TO cannot be earlier than Travel Date FROM');
+            Swal.fire({
+                title: 'Greska!',
+                text: 'Drugi datum ne moze biti pre prvog datuma',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
             document.getElementById('travel-date-to').value = '';
             document.getElementById('number-of-days').textContent = '';
         }
@@ -100,19 +106,29 @@ function submitForm(e) {
     e.preventDefault();
 
     let form = document.getElementById("insurance-form");
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+
+        return;
+    }
+
     const formData = new FormData(form);
     let jsonData = {};
 
     formData.forEach((value, key) => {
-        if (jsonData[key]) {
-            if (!Array.isArray(jsonData[key])) {
-                jsonData[key] = [jsonData[key]];
+        if (key.endsWith('[]')) {
+            const actualKey = key.slice(0, -2);
+            if (!jsonData[actualKey]) {
+                jsonData[actualKey] = [];
             }
-            jsonData[key].push(value);
+            jsonData[actualKey].push(value);
         } else {
             jsonData[key] = value;
         }
     });
+
+    console.log(jsonData);//exit;
 
     fetch('register.php', {
         method: 'POST',
@@ -124,24 +140,28 @@ function submitForm(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log(data.message);
+            console.log(data.message, data);
             Swal.fire({
                 title: 'Success!',
-                text: 'Data inserted successfully',
+                text: data.message,
                 icon: 'success',
                 confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "index.php";
+                }
             });
         } else {
             renderErrors(data.errors);
             Swal.fire({
-                title: 'Error!',
-                text: 'Failed to insert data',
+                title: 'Greska',
+                text: data.message,
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
             console.log(data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.log('Error:', error));
 
 }

@@ -16,6 +16,12 @@ function validateDate($date, $format = 'Y-m-d') {
 }
 
 function validateTravelDates($dateFrom, $dateTo) {
+
+    if (empty($dateFrom) || empty($dateTo)) {
+
+        return false;
+    }
+
     $dateFromObj = DateTime::createFromFormat('Y-m-d', $dateFrom);
     $dateToObj = DateTime::createFromFormat('Y-m-d', $dateTo);
 
@@ -25,7 +31,7 @@ function validateTravelDates($dateFrom, $dateTo) {
     }
 
     // Compare dates
-    return $dateToObj >= $dateFromObj;
+    return $dateToObj > $dateFromObj;
 }
 
 function validateField($field, $input, $regex, $errorMessage, &$data, &$errors) {
