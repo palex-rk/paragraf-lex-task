@@ -1,10 +1,8 @@
 <?php 
 
-require_once "Database.php";
 require_once "helpers.php";
 require_once "queries.php";
 
-use Src\Database;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

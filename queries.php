@@ -27,7 +27,7 @@ function getData()
         $insuranceId = $row['id'];
         
         if (!isset($insurances[$insuranceId])) {
-            // Initialize the insurance entry
+
             $insurances[$insuranceId] = [
                 'id' => $row['id'],
                 'first_name' => $row['first_name'],
@@ -54,7 +54,6 @@ function getData()
         }
     }
 
-    // Convert to indexed array
     $insurances = array_values($insurances);
 
     return $insurances;
