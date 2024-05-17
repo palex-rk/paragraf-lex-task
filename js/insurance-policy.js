@@ -128,8 +128,6 @@ function submitForm(e) {
         }
     });
 
-    console.log(jsonData);//exit;
-
     fetch('register.php', {
         method: 'POST',
         headers: {
@@ -140,7 +138,6 @@ function submitForm(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log(data.message, data);
             Swal.fire({
                 title: 'Success!',
                 text: data.message,
@@ -153,15 +150,24 @@ function submitForm(e) {
             });
         } else {
             renderErrors(data.errors);
-            Swal.fire({
-                title: 'Greska',
-                text: data.message,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            console.log(data.message);
         }
     })
-    .catch(error => console.log('Error:', error));
+    .catch(error => console.error('Error:', error));
 
+}
+
+function renderErrors(errors) {
+    // Clear previous errors
+    document.querySelectorAll('.error-message').forEach(span => {
+        span.textContent = '';
+    });
+    console.log(errors);
+
+    // Display new errors
+    for (let field in errors) {
+        let errorSpan = document.getElementById(field + '-err');
+        if (errorSpan) {
+            errorSpan.textContent = errors[field];
+        }
+    }
 }

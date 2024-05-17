@@ -18,48 +18,52 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="lastname">Prezime</label>    
-                    <input name="lastname" class="form-control" required>
+                    <label for="last-name">Prezime</label>    
+                    <input name="last-name" class="form-control" required>
 
-                    <p><span id="last-name-err" class="text-danger"></span></p>
+                    <p><span id="last-name-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="birthdate">Datum rodjenja</label>    
                     <input type="date" name="birthdate" class="form-control" min="1920-01-01" max="2004-01-01" required>
 
-                    <p><span id="birthdate-err" class="text-danger"></span></p>
+                    <p><span id="birthdate-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="passport-number">Broj pasosa</label>    
                     <input type="text" name="passport-number" class="form-control" required>
 
-                    <p><span id="passport-number-err" class="text-danger"></span></p>
+                    <p><span id="passport-number-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="phone-number">Broj telefona</label>    
                     <input type="tel" name="phone-number" class="form-control">
 
-                    <p><span id="phone-number-err" class="text-danger"></span></p>
+                    <p><span id="phone-number-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Mejl adresa</label>    
                     <input type="email" name="email" class="form-control" required>
 
-                    <p><span id="email-err" class="text-danger"></span></p>
+                    <p><span id="email-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="od">Datum Putovanja (OD)</label>
                     <input type="date" id="travel-date-from" name="travel-date-from" required>
+
+                    <p><span id="travel-date-from-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <div class="form-group">
                     <label for="od">Datum Putovanja (DO)</label>
                     <input type="date" id="travel-date-to" name="travel-date-to" required>
+
+                    <p><span id="travel-date-to-err" class="text-danger error-message"></span></p>
                 </div>
 
                 <p id="number-of-days" class="text-"></p>
@@ -72,15 +76,15 @@
                         <option value="group" id="group-insurance-selection">Grupno Osiguranje</option>
                     </select>
 
-                    <p><span id="insurance-type-err" class="text-danger"></span></p>
+                    <p><span id="insurance-type-err" class="text-danger error-message"></span></p>
                     
-                    <div id="additional-persons" class="additional-persons mt-5">
+                    <div id="additional-persons" class="additional-persons mt-3">
                         <h3>Dodaj Osiguraonika</h3>
                         <div id="additional-persons-container"></div>
                         <button type="button" id="add-person-btn" class="btn btn-warning">Dodaj Osiguraonika</button>
                     </div>
                     
-                <input type="submit" id="submit-btn" name="submit" class="btn btn-success mt-2" value="Sacuvaj osiguranje"/>
+                <input type="submit" id="submit-btn" name="submit" class="btn btn-success mt-2 w-100" value="Sacuvaj osiguranje"/>
             </div>
 
         </form>
