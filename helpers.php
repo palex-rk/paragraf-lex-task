@@ -26,11 +26,10 @@ function validateTravelDates($dateFrom, $dateTo) {
     $dateToObj = DateTime::createFromFormat('Y-m-d', $dateTo);
 
     if (!$dateFromObj || !$dateToObj) {
-        // Invalid date format
+ 
         return false;
     }
 
-    // Compare dates
     return $dateToObj > $dateFromObj;
 }
 

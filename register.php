@@ -58,7 +58,7 @@ function validateForm($input = [])
         $data['first_name'] = $first_name;
     }
 
-    if (empty($input["lastname"])) {
+    if (empty($input["last-name"])) {
         $errors['last-name'] = "Ovo polje je obavezno.";
     } else {
         $last_name = input_data($input["last-name"]);

@@ -72,8 +72,8 @@
                 <div class="form-group">
                     <label for="insurance-type">Tip osiguranja</label>    
                     <select id="insurance-type" name="insurance-type" class="form-control" required>
-                        <option value="individual">Individualno Osiguranje</option>
-                        <option value="group" id="group-insurance-selection">Grupno Osiguranje</option>
+                        <option value="individualno">Individualno Osiguranje</option>
+                        <option value="grupno" id="group-insurance-selection">Grupno Osiguranje</option>
                     </select>
 
                     <p><span id="insurance-type-err" class="text-danger error-message"></span></p>

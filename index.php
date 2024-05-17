@@ -23,6 +23,7 @@
                 <th scope="col">Broj Telefona</th>
                 <th scope="col">OD</th>
                 <th scope="col">DO</th>
+                <th scope="cole">Broj Dana</th>
                 <th scope="col">Tip Osiguranja</th>
                 <th scope="col">Clanovi Osiguranja</th>
             </tr>
@@ -36,11 +37,14 @@
                     <td><?php echo $insurance['email']; ?></td>
                     <td><?php echo $insurance['passport_number']; ?></td>
                     <td><?php echo $insurance['phone_number']; ?></td>
-                    <td><?php echo $insurance['travel_date_from']; ?></td>
-                    <td><?php echo $insurance['travel_date_to']; ?></td>
+                    <td class="w-100 text-nowrap"><?php $date_start = new DateTime($insurance['travel_date_from']);
+                        echo $date_start->format('d F Y'); ?></td>
+                    <td class="w-100 text-nowrap"><?php $date_end = new DateTime($insurance['travel_date_to']);
+                        echo $date_end->format('d F Y'); ?></td>
+                    <td><?php echo $date_start->diff($date_end)->days;?></td>
                     <td><?php echo $insurance['insurance_type']; ?></td>
                     <td>
-                        <?php if ($insurance['insurance_type'] == 'group'): ?>
+                        <?php if ($insurance['insurance_type'] == 'grupno'): ?>
                             <div class="accordion accordion-flush" id="accordion-<?php echo $insurance['id']?>">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
